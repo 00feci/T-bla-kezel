@@ -54,7 +54,11 @@ if ($selected_table) {
     require_once 'Kereses/logika.php';
     include_once 'Tabla/torles.php';
 
-    $stmtTotalCount = $pdo->prepare("SELECT COUNT(*) FROM `$selected_table` $whereSQL");
+    // Abszolút összes sor kiszámítása a teljes táblához [cite: 2026-03-08]
+    $stmtAbs = $pdo->query("SELECT COUNT(*) FROM `$tableName` " . ($selected_table === 'raw_import_data' ? "WHERE id > 1" : ""));
+    $absoluteTotal = (int)$stmtAbs->fetchColumn();
+
+    $stmtTotalCount = $pdo->prepare("SELECT COUNT(*) FROM `$tableName` $whereSQL");
     $stmtTotalCount->execute($queryParams);
     $totalRows = (int)$stmtTotalCount->fetchColumn();
 
@@ -101,4 +105,5 @@ if ($selected_table) {
     <script src="szuro.js?v=<?= time() ?>"></script>
     <script src="upload/script.js?v=<?= time() ?>"></script>
 </body>
+
 </html>
