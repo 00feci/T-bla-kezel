@@ -148,13 +148,47 @@ function updateLogicPreview() {
             }
         }
     }
-   const logicStr = fullLogic.join("").trim();
+    const logicStr = fullLogic.join("").trim();
     document.getElementById('logic-string').innerText = logicStr || "Válasszon feltételt...";
+
+    // Hibakeresés: Egy mező ÉS kapcsolattal nem lehet két különböző érték
+    let isError = false;
+    let currentAndGroup = {};
+    const allSearchRows = container.querySelectorAll('.search-row');
+
+    for (let i = 0; i < allSearchRows.length; i++) {
+        let r = allSearchRows[i];
+        let colEl = r.querySelector('.real-col-value') || r.querySelector('select[name="s_col[]"]');
+        let op = r.querySelector('[name="s_op[]"]').value;
+        let val = r.querySelector('[name="s_val[]"]').value.trim();
+
+        if (colEl && colEl.value !== 'all' && op === '=' && val !== '') {
+            // Ha már van ilyen oszlop az AND csoportban, és az értéke más, akkor hiba
+            if (currentAndGroup[colEl.value] !== undefined && currentAndGroup[colEl.value] !== val) {
+                isError = true;
+                break;
+            }
+            currentAndGroup[colEl.value] = val;
+        }
+
+        let logicEl = r.querySelector('.search-logic');
+        if (logicEl && logicEl.value === 'OR') {
+            currentAndGroup = {}; // VAGY esetén a szabály nullázódik a következő blokkra
+        }
+    }
     
-    // Minta eredmény azonnali frissítése
+    // Minta eredmény azonnali frissítése és formázása
     const sampleEl = document.getElementById('sample-result');
     if (sampleEl) {
-        sampleEl.innerText = logicStr ? "WHERE " + logicStr.replace(/BÁRHOL/g, '*') : "-";
+        if (isError) {
+            sampleEl.innerText = "HIBA: Egy mező ÉS kapcsolattal nem lehet két különböző érték!";
+            sampleEl.style.color = "red";
+            sampleEl.style.fontWeight = "bold";
+        } else {
+            sampleEl.innerText = logicStr ? "WHERE " + logicStr.replace(/BÁRHOL/g, '*') : "-";
+            sampleEl.style.color = "#666";
+            sampleEl.style.fontWeight = "normal";
+        }
     }
 }
 
@@ -218,3 +252,4 @@ document.addEventListener('click', function(e) {
 document.addEventListener('DOMContentLoaded', () => {
     updateLogicPreview();
 });
+
