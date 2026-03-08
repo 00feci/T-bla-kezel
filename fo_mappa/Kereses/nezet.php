@@ -50,7 +50,7 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
             $displayLabel = ($currentVal === 'all') ? '(bárhol)' : $currentVal;
         ?>
        <div class="search-row" style="margin-bottom: 5px;">
-    <span class="remove-row" onclick="this.parentElement.remove(); updateLogicPreview();" style="color:red; cursor:pointer; font-weight:bold; margin-right:5px;">X</span>
+   <span class="insert-row" onclick="insertSearchRow(this)" style="color:green; cursor:pointer; font-weight:bold; margin-right:10px;">(+)</span>
     <input type="hidden" name="s_group[]" value="0">
             
             <?php if ($useSpecialSearch): ?>
@@ -59,7 +59,7 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
                            value="<?= htmlspecialchars($displayLabel) ?>" 
                            oninput="filterCustomList(this)" onclick="showCustomList(this)" autocomplete="off">
                     <input type="hidden" name="s_col[]" class="real-col-value" value="<?= htmlspecialchars($currentVal) ?>">                    
-                    <div class="custom-col-list" style="display:none; border:1px solid #ccc; background:white; max-height:150px; overflow-y:auto; position:absolute; z-index:1000; width:100%;">   
+                    <div class="custom-col-list" style="display:none; border:1px solid #ccc; background:white; max-height:150px; overflow-y:auto; position:absolute; z-index:1000; width:100%;">
                         <div onclick="selectCustomOption(this, 'all')" style="cursor:pointer; padding:2px;">(bárhol)</div>
                         <?php foreach ($headers as $fejlec): 
                             $cleanName = str_replace('-egyedi', '', $fejlec); ?>
@@ -133,3 +133,4 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
 </script>
 
 <script src="Kereses/szkript.js?v=<?= time() ?>"></script>
+
