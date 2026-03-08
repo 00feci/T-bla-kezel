@@ -49,10 +49,10 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
             $currentVal = $_REQUEST['s_col'][$i] ?? 'all'; 
             $displayLabel = ($currentVal === 'all') ? '(bárhol)' : $currentVal;
         ?>
-       <div class="search-row" style="margin-bottom: 5px;">
-   <span class="insert-row" onclick="insertSearchRow(this)" style="color:green; cursor:pointer; font-weight:bold; margin-right:10px;">(+)</span>
-    <input type="hidden" name="s_group[]" value="0">
-            
+      <div class="search-row" style="margin-bottom: 5px; display: flex; align-items: center; flex-wrap: wrap;">
+    <span class="insert-row" onclick="insertSearchRow(this)" style="color:green; cursor:pointer; font-weight:bold; margin-right:10px;">(+)</span>
+    <span class="remove-row" onclick="this.parentElement.remove(); updateLogicPreview();" style="color:red; cursor:pointer; font-weight:bold; margin-right:10px;">(x)</span>
+    <input type="hidden" name="s_group[]" value="<?= htmlspecialchars($s_group[$i] ?? 0) ?>">
             <?php if ($useSpecialSearch): ?>
                <div class="special-col-container" style="display:inline-block; position:relative;">
                     <input type="text" class="col-search-input" placeholder="Oszlop..." 
@@ -133,5 +133,6 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
 </script>
 
 <script src="Kereses/szkript.js?v=<?= time() ?>"></script>
+
 
 
