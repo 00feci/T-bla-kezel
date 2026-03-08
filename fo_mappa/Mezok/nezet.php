@@ -61,11 +61,11 @@
             <option value="50" <?= $limit_param == "50" ? 'selected' : '' ?>>50</option>
             <option value="100" <?= $limit_param == "100" ? 'selected' : '' ?>>100</option>
             <option value="all" <?= $limit_param == "all" ? 'selected' : '' ?>>MIND</option>
-           <option value="count" <?= $limit_param == "count" ? 'selected' : '' ?>>CSAK SZÁM</option>
-        </select>
-        <button type="button" class="gomb-export" onclick="openExportModal()" style="background-color: #28a745; color: white; border: none; padding: 6px 12px; margin-right: 10px; cursor: pointer; border-radius: 3px; font-weight: bold;">Exportálás</button>
-        <button type="button" class="gomb-import" onclick="openUploadModal()">Importálás</button>
-    </div>
+<option value="count" <?= $limit_param == "count" ? 'selected' : '' ?>>CSAK SZÁM</option>
+</select>
+<button type="button" class="gomb-export" onclick="openExportModal()" style="background-color: #28a745; color: white; border: none; padding: 6px 12px; margin-right: 10px; cursor: pointer; border-radius: 3px; font-weight: bold;">Exportálás</button>
+<button type="button" class="gomb-import" onclick="openUploadModal()">Importálás</button>
+</div>
 </div>
 
 <?php if (empty($selected_table)): ?>
@@ -75,4 +75,5 @@
 <?php else: ?>
 
     <?php endif; ?>
+
 
