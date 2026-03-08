@@ -150,7 +150,7 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
     </div>
     <div id="logic-preview-box" style="background: #eef2f7; border-left: 5px solid #2196F3; padding: 10px; margin: 15px 0; font-family: monospace; font-size: 13px;">
         <strong>Logikai modell:</strong> <span id="logic-string">Válasszon feltételt...</span><br>
-        <strong>Minta eredmény:</strong> <span id="sample-result" style="color: red; font-weight: bold;">-</span>
+        <strong>Minta eredmény:</strong> <span id="sample-result" style="color: #666;">-</span>
     </div>
 
     <div class="search-actions" style="margin-top:20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
@@ -178,6 +178,7 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
 </script>
 
 <script src="Kereses/szkript.js?v=<?= time() ?>"></script>
+
 
 
 
