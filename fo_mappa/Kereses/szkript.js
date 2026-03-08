@@ -148,7 +148,14 @@ function updateLogicPreview() {
             }
         }
     }
-    document.getElementById('logic-string').innerText = fullLogic.join("").trim() || "Válasszon feltételt...";
+   const logicStr = fullLogic.join("").trim();
+    document.getElementById('logic-string').innerText = logicStr || "Válasszon feltételt...";
+    
+    // Minta eredmény azonnali frissítése
+    const sampleEl = document.getElementById('sample-result');
+    if (sampleEl) {
+        sampleEl.innerText = logicStr ? "WHERE " + logicStr.replace(/BÁRHOL/g, '*') : "-";
+    }
 }
 
 // Segédfüggvény egyetlen sor logikájának kinyeréséhez [cite: 2026-03-07]
@@ -207,4 +214,5 @@ document.addEventListener('click', function(e) {
     }
 
 });
+
 
