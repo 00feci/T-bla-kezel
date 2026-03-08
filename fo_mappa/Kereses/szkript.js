@@ -184,20 +184,19 @@ function filterCustomList(input) {
         opt.style.display = text.includes(filter) ? 'block' : 'none';
     });
 }
-
-// Kiválasztás kezelése [cite: 2026-03-07]
 function selectCustomOption(element, value) {
     const container = element.parentElement.parentElement;
     const input = container.querySelector('.col-search-input');
     const hidden = container.querySelector('.real-col-value');
     const list = container.querySelector('.custom-col-list');
     
-    input.value = element.innerText; // Beírjuk a nevet a látható mezőbe [cite: 2026-03-07]
-    hidden.value = value;            // Beírjuk a valódi nevet a rejtett mezőbe a PHP-nek [cite: 2026-03-07]
-    list.style.display = 'none';     // Bezárjuk a listát [cite: 2026-03-07]
+    if (input) input.value = element.innerText; 
+    if (hidden) hidden.value = value;            
+    if (list) list.style.display = 'none';     
     
-    updateLogicPreview();            // Frissítjük a logikai modellt [cite: 2026-03-07]
+    updateLogicPreview();            
 }
+
 
 // Kattintás kívülre: bezárja a listát [cite: 2026-03-07]
 document.addEventListener('click', function(e) {
@@ -206,4 +205,5 @@ document.addEventListener('click', function(e) {
             list.style.display = 'none';
         });
     }
+
 });
