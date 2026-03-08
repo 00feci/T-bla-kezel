@@ -115,10 +115,13 @@ function addSearchRow() {
     updateLogicPreview();
 }
 
+
+// xcxxx kód, ezt a blokot cseréld
 // LOGIKAI MODELL FRISSÍTÉSE (Csoport-tudatos verzió) [cite: 2026-03-07]
 function updateLogicPreview() {
     const container = document.getElementById('dynamic-search-container');
     let fullLogic = [];
+    let fullReadable = []; // ÚJ: Olvasható magyar mondat
     const elements = container.children;
     
     for (let i = 0; i < elements.length; i++) {
@@ -127,31 +130,43 @@ function updateLogicPreview() {
         
         if (el.classList.contains('search-row')) {
             let part = getRowLogicString(el);
+            let readPart = getRowReadableString(el);
             if (part) {
                 const logic = el.querySelector('.search-logic').value;
+                const logicH = logic === 'AND' ? ' ÉS ' : ' VAGY ';
                 fullLogic.push(part + (isLast ? "" : ` ${logic} `));
+                fullReadable.push(readPart + (isLast ? "" : `<span style="color:#2196F3; font-weight:bold;">${logicH}</span>`));
             }
         } else if (el.classList.contains('search-group')) {
             const rows = el.querySelectorAll('.search-row');
             let groupParts = [];
+            let groupReads = [];
             rows.forEach((r, idx) => {
                 let p = getRowLogicString(r);
+                let rp = getRowReadableString(r);
                 if (p) {
                     const rLogic = r.querySelector('.search-logic').value;
+                    const rLogicH = rLogic === 'AND' ? ' ÉS ' : ' VAGY ';
                     groupParts.push(p + (idx === rows.length - 1 ? "" : ` ${rLogic} `));
+                    groupReads.push(rp + (idx === rows.length - 1 ? "" : `<span style="color:#2196F3; font-weight:bold;">${rLogicH}</span>`));
                 }
             });
             if (groupParts.length > 0) {
                 const gLogicEl = el.querySelector('.group-logic');
                 const gLogic = gLogicEl ? gLogicEl.value : "AND";
+                const gLogicH = gLogic === 'AND' ? ' ÉS ' : ' VAGY ';
                 fullLogic.push(`(${groupParts.join("")})` + (isLast ? "" : ` ${gLogic} `));
+                fullReadable.push(`( ${groupReads.join("")} )` + (isLast ? "" : `<span style="color:#2196F3; font-weight:bold;">${gLogicH}</span>`));
             }
         }
     }
     const logicStr = fullLogic.join("").trim();
+    const readStr = fullReadable.join("").trim();
+
+    // Fejlesztői (nyers) SQL logika a felső sorba
     document.getElementById('logic-string').innerText = logicStr || "Válasszon feltételt...";
 
-    // Hibakeresés: Egy mező ÉS kapcsolattal nem lehet két különböző érték
+    // Hibakeresés: okos figyelem, ha véletlenül lehetetlent kér a felhasználó
     let isError = false;
     let currentAndGroup = {};
     const allSearchRows = container.querySelectorAll('.search-row');
@@ -163,36 +178,32 @@ function updateLogicPreview() {
         let val = r.querySelector('[name="s_val[]"]').value.trim();
 
         if (colEl && colEl.value !== 'all' && op === '=' && val !== '') {
-            // Ha már van ilyen oszlop az AND csoportban, és az értéke más, akkor hiba
             if (currentAndGroup[colEl.value] !== undefined && currentAndGroup[colEl.value] !== val) {
                 isError = true;
                 break;
             }
             currentAndGroup[colEl.value] = val;
         }
-
         let logicEl = r.querySelector('.search-logic');
         if (logicEl && logicEl.value === 'OR') {
-            currentAndGroup = {}; // VAGY esetén a szabály nullázódik a következő blokkra
+            currentAndGroup = {}; // VAGY esetén tiszta lappal indul a vizsgálat
         }
     }
-    
-    // Minta eredmény azonnali frissítése és formázása
+
+    // Emberi Minta eredmény frissítése
     const sampleEl = document.getElementById('sample-result');
     if (sampleEl) {
         if (isError) {
-            sampleEl.innerText = "HIBA: Egy mező ÉS kapcsolattal nem lehet két különböző érték!";
-            sampleEl.style.color = "red";
-            sampleEl.style.fontWeight = "bold";
+            sampleEl.innerHTML = `❌ <span style="color:red; font-weight:bold;">HIBA: Egy mező nem lehet egyszerre két különböző dolog! (Használj VAGY kapcsolatot, vagy IN operátort)</span>`;
         } else {
-            sampleEl.innerText = logicStr ? "WHERE " + logicStr.replace(/BÁRHOL/g, '*') : "-";
-            sampleEl.style.color = "#666";
+            sampleEl.innerHTML = readStr ? readStr : "-";
+            sampleEl.style.color = "#444";
             sampleEl.style.fontWeight = "normal";
         }
     }
 }
 
-// Segédfüggvény egyetlen sor logikájának kinyeréséhez [cite: 2026-03-07]
+// Fejlesztői SQL kinyerése
 function getRowLogicString(row) {
     const colEl = row.querySelector('.real-col-value') || row.querySelector('select[name="s_col[]"]');
     const op = row.querySelector('[name="s_op[]"]').value;
@@ -200,6 +211,38 @@ function getRowLogicString(row) {
     if (!colEl || (val === "" && op !== 'IS NULL' && op !== 'IS NOT NULL')) return null;
     return `${colEl.value === 'all' ? 'BÁRHOL' : colEl.value} ${op}${val ? " '" + val + "'" : ""}`;
 }
+
+// ÚJ: Magyar emberi nyelvű mondat kinyerése
+function getRowReadableString(row) {
+    const colEl = row.querySelector('.real-col-value') || row.querySelector('select[name="s_col[]"]');
+    const opSelect = row.querySelector('[name="s_op[]"]');
+    const val = row.querySelector('[name="s_val[]"]').value.trim();
+
+    if (!colEl) return null;
+    const op = opSelect.value;
+    if (val === "" && op !== 'IS NULL' && op !== 'IS NOT NULL') return null;
+
+    const colText = colEl.value === 'all' ? 'Bármely mező' : colEl.value;
+
+    let opText = "";
+    switch(op) {
+        case '=': opText = '='; break;
+        case '!=': opText = 'nem'; break;
+        case 'LIKE': opText = 'kezdődik:'; break;
+        case 'LIKE_ANY': opText = 'tartalmazza:'; break;
+        case 'NOT LIKE': opText = 'nem tartalmazza:'; break;
+        case 'IS NULL': return `<b>${colText}</b> üres`;
+        case 'IS NOT NULL': return `<b>${colText}</b> ki van töltve`;
+        case 'IN': opText = 'ezek közül:'; break;
+        case 'NOT IN': opText = 'nem ezek:'; break;
+        default: opText = op; // <, >, <=, >= stb.
+    }
+
+    return `<b>${colText}</b> ${opText} <i>${val}</i>`;
+}
+
+
+
 
 // ... (showCustomList, filterCustomList, selectCustomOption és a click listener változatlan marad) ...
 function showCustomList(input) {
@@ -252,4 +295,5 @@ document.addEventListener('click', function(e) {
 document.addEventListener('DOMContentLoaded', () => {
     updateLogicPreview();
 });
+
 
