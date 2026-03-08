@@ -103,15 +103,16 @@ if (isset($_REQUEST['s_col']) && is_array($_REQUEST['s_col'])) {
         }
     } // Foreach lezárása
 
-    foreach ($groupedConditions as $gid => $rows) {
+   foreach ($groupedConditions as $gid => $rows) {
         $parts = [];
         foreach ($rows as $idx => $r) {
             $parts[] = $r['sql'] . ($idx < count($rows) - 1 ? " " . $r['logic'] : "");
         }
         $innerContent = implode(" ", $parts);
-        $whereClauses[] = ($gid == 0) ? $innerContent : "(" . $innerContent . ")";
+        // Minden csoportot (a 0-ást is, ha több elemű) zárójelbe teszünk a precedencia miatt
+        $whereClauses[] = (count($rows) > 1 || $gid != 0) ? "(" . $innerContent . ")" : $innerContent;
     }
-} // If (isset s_col) lezárása
+} // If (isset s_col) lezárásaa
 
 
 // 4. Végleges WHERE felépítése (A csoportok közé alapértelmezett AND-et teszünk) [cite: 2026-03-07]
@@ -149,3 +150,4 @@ if ($limit_param === 'count') {
 
 $pagedData = $stmtData->fetchAll(PDO::FETCH_ASSOC);
 }
+
