@@ -54,7 +54,7 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
     <input type="hidden" name="s_group[]" value="0">
             
             <?php if ($useSpecialSearch): ?>
-                <div class="special-col-container" style="display:inline-block; position:relative;">
+               <div class="special-col-container" style="display:inline-block; position:relative;">
                     <input type="text" class="col-search-input" placeholder="Oszlop..." 
                            value="<?= htmlspecialchars($displayLabel) ?>" 
                            oninput="filterCustomList(this)" onclick="showCustomList(this)" autocomplete="off">
@@ -133,4 +133,5 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
 </script>
 
 <script src="Kereses/szkript.js?v=<?= time() ?>"></script>
+
 
