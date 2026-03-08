@@ -74,15 +74,55 @@
         document.getElementById('export_custom_cols').style.display = (val === 'custom') ? 'block' : 'none';
     }
 
-    function addExportRow() {
+   function addExportRow() {
         const container = document.getElementById('export-rows-container');
         const firstRow = container.querySelector('.export-row');
         if (firstRow) {
             const newRow = firstRow.cloneNode(true);
-            newRow.querySelector('select').selectedIndex = 0; // Visszaáll az első elemre
+            // Keresőmező ürítése az új sorban
+            const input = newRow.querySelector('.export-col-search-input');
+            const hidden = newRow.querySelector('.export-real-col-value');
+            if (input) input.value = '';
+            if (hidden) hidden.value = '';
             container.appendChild(newRow);
         }
     }
+
+    function showExportColList(input) {
+        const list = input.parentElement.querySelector('.export-custom-col-list');
+        if (list) list.style.display = 'block';
+    }
+
+    function filterExportColList(input) {
+        const filter = input.value.toLowerCase();
+        const list = input.parentElement.querySelector('.export-custom-col-list');
+        const options = list.querySelectorAll('div');
+        list.style.display = 'block';
+        options.forEach(opt => {
+            const text = opt.innerText.toLowerCase();
+            opt.style.display = text.includes(filter) ? 'block' : 'none';
+        });
+    }
+
+    function selectExportCol(element, value) {
+        const container = element.parentElement.parentElement;
+        const input = container.querySelector('.export-col-search-input');
+        const hidden = container.querySelector('.export-real-col-value');
+        const list = container.querySelector('.export-custom-col-list');
+        
+        if (input) input.value = element.innerText; 
+        if (hidden) hidden.value = value;            
+        if (list) list.style.display = 'none';     
+    }
+
+    // Kattintás kívülre bezárja a lenyíló listákat
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.export-special-col-container')) {
+            document.querySelectorAll('.export-custom-col-list').forEach(list => {
+                list.style.display = 'none';
+            });
+        }
+    });
 
     function removeExportRow(btn) {
         const container = document.getElementById('export-rows-container');
@@ -124,4 +164,5 @@
         }, 1000);
     }
 </script>
+
 
