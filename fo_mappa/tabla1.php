@@ -97,6 +97,7 @@ if ($selected_table) {
         include 'Tabla/nezet.php';   // Maga a táblázat [cite: 2026-03-05]
         include 'Tabla/torles.php';   // Maga a táblázat [cite: 2026-03-05]
         include_once 'upload/modal.php';
+        include_once 'export/modal.php';
         ?>
         <input type="hidden" name="page" id="current_page" value="<?= $page ?>">
     </form>
@@ -107,3 +108,4 @@ if ($selected_table) {
 </body>
 
 </html>
+
