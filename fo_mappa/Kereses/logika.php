@@ -69,18 +69,18 @@ if (isset($_REQUEST['s_col']) && is_array($_REQUEST['s_col'])) {
                 $cleanC = preg_replace('/[^a-zA-Z0-9_]/', '', str_replace('-egyedi', '', $c));
                 if ($cleanC === 'id') continue;
                 switch ($op) {
-                        case '=':           $rowParts[] = "`$c` = ?"; $queryParams[] = $val; break;
-                        case '!=':          $rowParts[] = "`$c` != ?"; $queryParams[] = $val; break;
-                        case '<':           $rowParts[] = "`$c` < ?"; $queryParams[] = $val; break;
-                        case '>':           $rowParts[] = "`$c` > ?"; $queryParams[] = $val; break;
-                        case '<=':          $rowParts[] = "`$c` <= ?"; $queryParams[] = $val; break;
-                        case '>=':          $rowParts[] = "`$c` >= ?"; $queryParams[] = $val; break;
-                        case 'LIKE':        $rowParts[] = "`$c` LIKE ?"; $queryParams[] = $val . "%"; break;
-                        case 'LIKE_ANY':    $rowParts[] = "`$c` LIKE ?"; $queryParams[] = "%" . $val . "%"; break;
-                        case 'NOT LIKE':    $rowParts[] = "`$c` NOT LIKE ?"; $queryParams[] = "%" . $val . "%"; break;
-                        case 'REGEXP':      $rowParts[] = "`$c` REGEXP ?"; $queryParams[] = $val; break;
-                        case 'NOT REGEXP':  $rowParts[] = "`$c` NOT REGEXP ?"; $queryParams[] = $val; break;
-                        case 'WORD_SEARCH': $rowParts[] = "`$c` REGEXP ?"; $queryParams[] = "[[:<:]]" . $val . "[[:>:]]"; break;
+                        case '=':           $rowParts[] = "`$cleanC` = ?"; $queryParams[] = $val; break;
+                        case '!=':          $rowParts[] = "`$cleanC` != ?"; $queryParams[] = $val; break;
+                        case '<':           $rowParts[] = "`$cleanC` < ?"; $queryParams[] = $val; break;
+                        case '>':           $rowParts[] = "`$cleanC` > ?"; $queryParams[] = $val; break;
+                        case '<=':          $rowParts[] = "`$cleanC` <= ?"; $queryParams[] = $val; break;
+                        case '>=':          $rowParts[] = "`$cleanC` >= ?"; $queryParams[] = $val; break;
+                        case 'LIKE':        $rowParts[] = "`$cleanC` LIKE ?"; $queryParams[] = $val . "%"; break;
+                        case 'LIKE_ANY':    $rowParts[] = "`$cleanC` LIKE ?"; $queryParams[] = "%" . $val . "%"; break;
+                        case 'NOT LIKE':    $rowParts[] = "`$cleanC` NOT LIKE ?"; $queryParams[] = "%" . $val . "%"; break;
+                        case 'REGEXP':      $rowParts[] = "`$cleanC` REGEXP ?"; $queryParams[] = $val; break;
+                        case 'NOT REGEXP':  $rowParts[] = "`$cleanC` NOT REGEXP ?"; $queryParams[] = $val; break;
+                        case 'WORD_SEARCH': $rowParts[] = "`$cleanC` REGEXP ?"; $queryParams[] = "[[:<:]]" . $val . "[[:>:]]"; break;
                         case 'IN':
                         case 'NOT IN':
             $vals = array_map('trim', explode(',', $val));
@@ -147,5 +147,5 @@ if ($limit_param === 'count') {
     $stmtData = $pdo->prepare($sql);
     $stmtData->execute($queryParams);
 
-    $pagedData = $stmtData->fetchAll(PDO::FETCH_ASSOC);
+$pagedData = $stmtData->fetchAll(PDO::FETCH_ASSOC);
 }
