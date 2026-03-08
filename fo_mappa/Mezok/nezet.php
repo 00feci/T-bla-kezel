@@ -35,22 +35,22 @@
     <input type="hidden" name="table_to_delete" value="<?= htmlspecialchars($selected_table) ?>">
 <?php endif; ?>
     </div>
-    <?php if (isset($limit_param) && $limit_param !== 'all' && $limit_param !== 'count'): ?>
+<?php if (isset($limit_param) && $limit_param !== 'all'): ?>
     <div class="pagination-container">
-        <input type="hidden" name="page" id="current_page" value="<?= $page ?>">
-        
-        <button type="submit" onclick="document.getElementById('current_page').value=<?= max(1, $page - 1) ?>;" <?= $page <= 1 ? 'disabled' : '' ?>>« Előző</button>
-        
-        <?php 
-        $startPage = max(1, $page - 2);
-        $endPage = min($totalPages, $page + 2);
-        for ($i = $startPage; $i <= $endPage; $i++): ?>
-            <button type="submit" name="page_btn" onclick="document.getElementById('current_page').value=<?= $i ?>;" class="<?= $i == $page ? 'active-page' : '' ?>"><?= $i ?></button>
-        <?php endfor; ?>
-        
-        <button type="submit" onclick="document.getElementById('current_page').value=<?= min($totalPages, $page + 1) ?>;" <?= $page >= $totalPages ? 'disabled' : '' ?>>Következő »</button>
-        
-        <span class="page-info">Szűrt találatok: <?= $totalRows ?></span>
+        <?php if ($limit_param === 'count'): ?>
+            <span class="page-info">Teljes tábla: <?= number_format($absoluteTotal, 0, '.', ' ') ?> / Szűrt találatok: <?= number_format($totalRows, 0, '.', ' ') ?></span>
+        <?php else: ?>
+            <input type="hidden" name="page" id="current_page" value="<?= $page ?>">
+            <button type="submit" onclick="document.getElementById('current_page').value=<?= max(1, $page - 1) ?>;" <?= $page <= 1 ? 'disabled' : '' ?>>« Előző</button>
+            <?php 
+            $startPage = max(1, $page - 2);
+            $endPage = min($totalPages, $page + 2);
+            for ($i = $startPage; $i <= $endPage; $i++): ?>
+                <button type="submit" name="page_btn" onclick="document.getElementById('current_page').value=<?= $i ?>;" class="<?= $i == $page ? 'active-page' : '' ?>"><?= $i ?></button>
+            <?php endfor; ?>
+            <button type="submit" onclick="document.getElementById('current_page').value=<?= min($totalPages, $page + 1) ?>;" <?= $page >= $totalPages ? 'disabled' : '' ?>>Következő »</button>
+            <span class="page-info">Szűrt találatok: <?= number_format($totalRows, 0, '.', ' ') ?></span>
+        <?php endif; ?>
     </div>
 <?php endif; ?>
 
@@ -72,4 +72,5 @@
         Kérjük, válasszon egy új táblát a listából a folytatáshoz.
     </div>
 <?php else: ?>
+
     <?php endif; ?>
