@@ -9,7 +9,7 @@ ini_set('max_execution_time', 300);
 require_once __DIR__.'/../../../jogosultsag.php';
 ellenorizJogosultsag('belepes');
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/sql_config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/oldal/sql_config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/php_xlsx_writer/xlsxwriter.class.php';
 
 $pdo = csatlakozasSzerver1();
