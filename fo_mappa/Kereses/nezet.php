@@ -33,26 +33,50 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
 ?>
 
 <script>
-    // Most már minden változó létezik, mielőtt ideérünk [cite: 2026-03-07]
     window.columnData = <?= json_encode($columnOptionsArr) ?>;
     window.operatorOptions = <?= json_encode($operatorHtmlBase) ?>;
     window.logicOptions = `<option value="AND">ÉS</option><option value="OR">VAGY</option>`;
     window.useSpecialSearch = <?= json_encode($useSpecialSearch) ?>;
+    <?php
+    $s_group_req = $_REQUEST['s_group'] ?? [];
+    $maxGroupId = empty($s_group_req) ? 0 : max((array)$s_group_req);
+    ?>
+    if (typeof groupCounter === 'undefined') { var groupCounter = <?= (int)$maxGroupId ?>; }
 </script>
 
 <fieldset class="adminer-search-box">
     <legend>Részletes Keresés (Dinamikus)</legend>
     <div id="dynamic-search-container">
        <?php 
-        $rowCount = isset($_REQUEST['s_col']) ? count($_REQUEST['s_col']) : 1;
-        for ($i = 0; $i < $rowCount; $i++): 
-            $currentVal = $_REQUEST['s_col'][$i] ?? 'all'; 
-            $displayLabel = ($currentVal === 'all') ? '(bárhol)' : $currentVal;
+        $s_col_req = $_REQUEST['s_col'] ?? ['all'];
+        $s_group_req = $_REQUEST['s_group'] ?? array_fill(0, count($s_col_req), 0);
+        
+        // Csoportosítjuk az indexeket a HTML újraépítéshez
+        $groupedRows = [];
+        foreach ($s_col_req as $i => $col) {
+            $gId = $s_group_req[$i] ?? 0;
+            $groupedRows[$gId][] = $i;
+        }
+
+        foreach ($groupedRows as $gId => $indexes):
+            if ($gId != 0): // Csoport keretének renderelése
+        ?>
+            <div class="search-group" data-group-id="<?= htmlspecialchars($gId) ?>" style="border: 2px dashed #bbb; background: #fdfdfd; padding: 15px; margin: 10px 0; position: relative;">
+                <span style="position:absolute; top:-10px; left:10px; background:white; padding:0 5px; font-size:11px; color:#888; font-weight:bold;">CSOPORT #<?= htmlspecialchars($gId) ?></span>
+                <span class="remove-row" onclick="this.parentElement.remove(); updateLogicPreview();" style="position:absolute; right:10px; top:5px; color:red; cursor:pointer; font-weight:bold;">X csoport törlése</span>
+                <div class="group-rows-container">
+        <?php 
+            endif;
+            
+            foreach ($indexes as $i): 
+                $currentVal = $_REQUEST['s_col'][$i] ?? 'all'; 
+                $displayLabel = ($currentVal === 'all') ? '(bárhol)' : $currentVal;
+                $logicVal = $_REQUEST['s_logic'][$i] ?? 'AND';
         ?>
       <div class="search-row" style="margin-bottom: 5px; display: flex; align-items: center; flex-wrap: wrap;">
     <span class="insert-row" onclick="insertSearchRow(this)" style="color:green; cursor:pointer; font-weight:bold; margin-right:10px;">(+)</span>
     <span class="remove-row" onclick="this.parentElement.remove(); updateLogicPreview();" style="color:red; cursor:pointer; font-weight:bold; margin-right:10px;">(x)</span>
-    <input type="hidden" name="s_group[]" value="<?= htmlspecialchars($s_group[$i] ?? 0) ?>">
+    <input type="hidden" name="s_group[]" value="<?= htmlspecialchars($gId) ?>">
             <?php if ($useSpecialSearch): ?>
                <div class="special-col-container" style="display:inline-block; position:relative;">
                     <input type="text" class="col-search-input" placeholder="Oszlop..." 
@@ -92,8 +116,8 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
                    value="<?= htmlspecialchars($_REQUEST['s_val'][$i] ?? '') ?>" oninput="updateLogicPreview()">
 
            <select name="s_logic[]" class="search-logic" onchange="updateLogicPreview()">
-                <option value="AND" <?= (isset($_REQUEST['s_logic'][$i]) && $_REQUEST['s_logic'][$i] == 'AND') ? 'selected' : '' ?>>ÉS</option>
-                <option value="OR" <?= (isset($_REQUEST['s_logic'][$i]) && $_REQUEST['s_logic'][$i] == 'OR') ? 'selected' : '' ?>>VAGY</option>
+                <option value="AND" <?= ($logicVal == 'AND') ? 'selected' : '' ?>>ÉS</option>
+                <option value="OR" <?= ($logicVal == 'OR') ? 'selected' : '' ?>>VAGY</option>
             </select>
 
             <span class="move-row" style="margin-left: 10px; cursor: pointer; user-select: none;">
@@ -101,11 +125,32 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
                 <span onclick="moveRowDown(this)">▼</span>
             </span>
         </div>
-        <?php endfor; ?>
+        <?php 
+            endforeach;
+            
+            if ($gId != 0): // Csoport lezárása
+        ?>
+                </div>
+                <div style="margin-top:10px; display: flex; align-items: center; gap: 10px;">
+                    <button type="button" onclick="addRowToGroup(this)" style="font-size:12px;">+ Sor a csoporthoz</button>
+                    <select name="g_logic[]" class="group-logic" onchange="updateLogicPreview()" style="font-size:12px;">
+                        <option value="AND">ÉS (következő elem)</option>
+                        <option value="OR">VAGY (következő elem)</option>
+                    </select>
+                    <span class="move-row" style="cursor: pointer; user-select: none;">
+                        <span onclick="moveRowUp(this)">▲</span>
+                        <span onclick="moveRowDown(this)">▼</span>
+                    </span>
+                </div>
+            </div>
+        <?php 
+            endif;
+        endforeach;
+        ?>
     </div>
     <div id="logic-preview-box" style="background: #eef2f7; border-left: 5px solid #2196F3; padding: 10px; margin: 15px 0; font-family: monospace; font-size: 13px;">
         <strong>Logikai modell:</strong> <span id="logic-string">Válasszon feltételt...</span><br>
-        <strong>Minta eredmény:</strong> <span id="sample-result" style="color: #666;">-</span>
+        <strong>Minta eredmény:</strong> <span id="sample-result" style="color: red; font-weight: bold;">-</span>
     </div>
 
     <div class="search-actions" style="margin-top:20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
@@ -133,6 +178,7 @@ foreach ($operators as $val => $label) { $operatorHtmlBase .= "<option value=\"$
 </script>
 
 <script src="Kereses/szkript.js?v=<?= time() ?>"></script>
+
 
 
 
