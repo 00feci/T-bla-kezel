@@ -25,10 +25,20 @@
                     <div class="export-row" style="display:flex; gap:5px; margin-bottom:8px; align-items: center;">
                         <span onclick="moveExportUp(this)" style="cursor:pointer; user-select:none; color: #555;">▲</span>
                         <span onclick="moveExportDown(this)" style="cursor:pointer; user-select:none; color: #555;">▼</span>
-                        <select name="export_col[]" style="padding: 5px; flex-grow: 1; border: 1px solid #aaa;">
-                            <?php foreach($headers as $h): ?>
-                                <option value="<?= htmlspecialchars($h) ?>"><?= htmlspecialchars($h) ?></option>
-                            <?php endforeach; ?>
+                       <div class="export-special-col-container" style="display:inline-block; position:relative; flex-grow: 1;">
+                            <input type="text" class="export-col-search-input" placeholder="Oszlop keresése..." 
+                                   value="<?= htmlspecialchars($headers[0] ?? '') ?>" 
+                                   oninput="filterExportColList(this)" onclick="showExportColList(this)" autocomplete="off" 
+                                   style="width:100%; padding: 5px; box-sizing: border-box; border: 1px solid #aaa;">
+                            <input type="hidden" name="export_col[]" class="export-real-col-value" value="<?= htmlspecialchars($headers[0] ?? '') ?>">                    
+                            <div class="export-custom-col-list" style="display:none; border:1px solid #ccc; background:white; max-height:150px; overflow-y:auto; position:absolute; z-index:1000; width:100%; text-align: left;">
+                                <?php foreach ($headers as $fejlec): ?>
+                                    <div onclick="selectExportCol(this, '<?= htmlspecialchars($fejlec) ?>')" style="cursor:pointer; padding:5px; border-bottom:1px solid #eee;">
+                                        <?= htmlspecialchars($fejlec) ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
                         </select>
                         <span onclick="removeExportRow(this)" style="color:red; cursor:pointer; font-weight:bold; padding: 0 5px;" title="Törlés">X</span>
                     </div>
@@ -114,3 +124,4 @@
         }, 1000);
     }
 </script>
+
