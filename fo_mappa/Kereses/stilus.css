@@ -1,0 +1,302 @@
+.adminer-search-box legend {
+    font-weight: bold;
+    padding: 0 10px;
+    color: #333;
+}
+
+/* Keresési sor elrendezése */
+.search-logic-row {
+    margin-bottom: 10px;
+}
+
+.search-row {
+    margin-bottom: 8px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.search-row select, 
+.search-row input {
+    padding: 5px;
+    border: 1px solid #aaa;
+}
+
+.search-row input {
+    width: 250px;
+}
+
+.search-row .btn-remove {
+    color: red;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* 1. Fő konténer: Rugalmas elrendezés és sortörés engedélyezése [cite: 2026-03-07] */
+.search-actions {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;       /* Ha nem fér el, ugorjon új sorba! [cite: 2026-03-07] */
+    align-items: center;
+    gap: 15px;             /* Kényelmes távolság a gombcsoportok között [cite: 2026-03-07] */
+}
+/* Keresődoboz és elemei */
+.adminer-search-box {
+    margin: 10px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #fdfdfd;
+}
+
+.adminer-search-box legend {
+    font-weight: bold;
+    padding: 0 10px;
+    color: #333;
+}
+
+.search-logic-row {
+    margin-bottom: 10px;
+}
+
+.search-logic-row label {
+    margin-left: 10px;
+}
+
+.search-row {
+    margin-bottom: 5px;
+    display: flex;
+    gap: 5px;
+}
+
+.search-row input[type="text"] {
+    width: 200px;
+}
+
+.btn-add-row {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.btn-remove {
+    color: red;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-ok { background: #00897b; color: white; border: none; }
+.btn-clear {
+    background-color: #252424; /* Pirosas árnyalat f44336*/
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.btn-clear:hover {
+    background-color: #d32f2f;
+}
+/* FŐ KONTÉNER ÉS ELRENDEZÉS [cite: 2026-03-07] */
+.adminer-search-box {
+    margin: 10px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #fdfdfd;
+}
+
+.adminer-search-box legend {
+    font-weight: bold;
+    padding: 0 10px;
+    color: #333;
+}
+
+/* KERESÉSI SOROK [cite: 2026-03-06, 2026-03-07] */
+.search-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    background: #f9f9f9;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.search-row select, 
+.search-row input[type="text"] {
+    padding: 5px;
+    border: 1px solid #aaa;
+}
+
+.search-input {
+    flex-grow: 1; /* Kitölti a maradék helyet [cite: 2026-03-06] */
+}
+
+/* GOMBOK ÉS MŰVELETEK [cite: 2026-03-07] */
+.search-actions {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap; /* Sorugrás, ha nem fér el [cite: 2026-03-07] */
+    align-items: center;
+    gap: 15px;
+}
+
+.action-pair {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0; /* Tilos az összenyomódás! [cite: 2026-03-07] */
+    margin-right: 5px;
+}
+
+.search-actions button {
+    white-space: nowrap; /* Ne törjön a szöveg [cite: 2026-03-07] */
+    flex-shrink: 0; 
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 3px;
+    border: none;
+    color: white;
+}
+
+.btn-add-row { background: #2196F3; }
+.btn-ok { background: #00897b; }
+.btn-clear { background-color: #252424; margin-left: 10px; }
+.btn-clear:hover { background-color: #d32f2f; }
+
+/* SEGÍTŐ IKON ÉS TOOLTIP [cite: 2026-03-07] */
+.help-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #4931cf;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: help;
+    margin-left: 8px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.help-icon::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    width: 250px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2000;
+    font-weight: normal;
+    line-height: 1.4;
+}
+
+.help-icon:hover::after {
+    visibility: visible;
+    opacity: 1;
+}
+
+.remove-row {
+    color: #d32f2f;
+    font-size: 18px;
+    padding: 0 5px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s;
+}
+.remove-row:hover { transform: scale(1.3); }
+
+.search-input {
+    flex-grow: 1; /* A szövegmező kitölti a maradék helyet [cite: 2026-03-06] */
+    padding: 4px;
+}
+.search-logic {
+    font-weight: bold;
+    background: #e0e0e0;
+    border-radius: 3px;
+} 
+
+/* 4. Segítő ikon fix mérettel [cite: 2026-03-07] */
+.help-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;           /* Kicsit nagyobbra vettem a jobb olvashatóságért [cite: 2026-03-07] */
+    height: 22px;
+    border-radius: 50%;
+    background: #4931cf;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: help;
+    margin-left: 8px;
+    flex-shrink: 0;        /* Az ikon maradjon mindig kör alakú [cite: 2026-03-07] */
+    position: relative;
+}
+
+
+    /* A buborék (tooltip) alaphelyzetben rejtett [cite: 2026-03-07] */
+    .help-icon::after {
+        content: attr(data-tip);
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        white-space: normal;
+        width: 250px;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 2000;
+        font-weight: normal;
+        line-height: 1.4;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+
+    /* Megjelenítés hover esetén [cite: 2026-03-07] */
+    .help-icon:hover::after {
+        visibility: visible;
+        opacity: 1;
+    }
+
+  /* 3. Gombok egyedi védelme [cite: 2026-03-07] */
+.search-actions button {
+    white-space: nowrap;   /* A szöveg ne törjön meg [cite: 2026-03-07] */
+    flex-shrink: 0;        /* Extra védelem a gombnak [cite: 2026-03-07] */
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 3px;
+    border: none;
+}
+
+  /* 2. Gomb + Kérdőjel párosa: Tilos az összenyomódás! [cite: 2026-03-07] */
+.action-pair {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;        /* A teljes párost tilos összenyomni! [cite: 2026-03-07] */
+    margin-right: 5px;
+}

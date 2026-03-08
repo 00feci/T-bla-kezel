@@ -1,0 +1,107 @@
+/* Modal alapréteg */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Modal ablak */
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 400px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.modal-body {
+    margin: 20px 0;
+}
+
+/* Bemeneti csoportok */
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-group input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+
+/* Fájlválasztó egyedi gombja */
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.file-name-text {
+    font-size: 0.85em;
+    color: #666;
+    font-style: italic;
+}
+
+/* Haladási sáv (Progress Bar) */
+.progress-bar-bg {
+    width: 100%;
+    background: #eee;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: #4caf50;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Gombok */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.btn-upload { background: #28a745; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 3px; }
+.btn-upload:disabled { background: #94d3a2; cursor: not-allowed; }
+.btn-cancel { background: #6c757d; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 3px; }
+.btn-secondary { background: #f8f9fa; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer; }
+
+/* Import gomb a főoldalon */
+.btn-import {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-weight: bold;
+}

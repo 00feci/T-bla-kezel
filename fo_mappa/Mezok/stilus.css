@@ -1,0 +1,91 @@
+/* Mezok / stilus.css [cite: 2026-02-18] */
+
+.gomb-import {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.gomb-import:hover {
+    background-color: #0056b3;
+}
+
+/* Fő konténer a táblaváltónak és a limitnek [cite: 2026-02-18] */
+.top-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.control-group select {
+    padding: 6px;
+    border: 1px solid #ccc;
+}
+.top-controls select {
+    padding: 5px;
+}
+/* Statisztikai és speciális sorok */
+.selected-table-select {
+    font-weight: bold;
+    color: #007bff;
+}
+/* Mezok / stilus.css */
+.vezerlo-kontener {
+    display: flex; /* Rugalmas elrendezés bekapcsolása */
+    justify-content: space-between; /* A két csoport a két szélre kerül */
+    align-items: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    margin: 10px 0;
+}
+
+.vezerlo-csoport {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Távolság az elemek (label, select, gomb) között */
+}
+
+.tabla-valaszto, .limit-valaszto {
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Törlés gomb piros színe a korábbi kérésed alapján [cite: 2026-02-18] */
+.btn-remove {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.btn-remove:hover {
+    background-color: #d32f2f;
+}
+
+/* Importálás gomb kék színe */
+.gomb-import {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 3px;
+}
