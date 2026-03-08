@@ -205,14 +205,16 @@ function selectCustomOption(element, value) {
 }
 
 
-// Kattintás kívülre: bezárja a listát [cite: 2026-03-07]
+// Kattintás kívülre: bezárja a listát
 document.addEventListener('click', function(e) {
     if (!e.target.closest('.special-col-container')) {
         document.querySelectorAll('.custom-col-list').forEach(list => {
             list.style.display = 'none';
         });
     }
-
 });
 
-
+// Ez az a rész, ami hiányzott a fájlból: betöltéskor is fusson le a frissítés
+document.addEventListener('DOMContentLoaded', () => {
+    updateLogicPreview();
+});
