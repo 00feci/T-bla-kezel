@@ -50,9 +50,8 @@ if ($selected_table) {
             $headers[] = $colName;
         }
     }
-
+  include_once 'Tabla/torles.php';
     require_once 'Kereses/logika.php';
-    include_once 'Tabla/torles.php';
 
     // Abszolút összes sor kiszámítása a teljes táblához [cite: 2026-03-08]
     $stmtAbs = $pdo->query("SELECT COUNT(*) FROM `$tableName` " . ($selected_table === 'raw_import_data' ? "WHERE id > 1" : ""));
@@ -91,8 +90,7 @@ if ($selected_table) {
 </head>
 <body>
     <form method="POST" action="tabla1.php" id="mainForm">
-        <?php 
-include 'Tabla/torles.php';  
+        <?php  
         include 'Kereses/nezet.php'; // A dinamikus fieldset [cite: 2026-02-18]
         include 'Mezok/nezet.php';   // Táblaváltó és Megjelenítés [cite: 2026-03-05]
         include 'Tabla/nezet.php';   // Maga a táblázat [cite: 2026-03-05]
@@ -108,5 +106,6 @@ include 'Tabla/torles.php';
 </body>
 
 </html>
+
 
 
