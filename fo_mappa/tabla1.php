@@ -92,10 +92,10 @@ if ($selected_table) {
 <body>
     <form method="POST" action="tabla1.php" id="mainForm">
         <?php 
+include 'Tabla/torles.php';  
         include 'Kereses/nezet.php'; // A dinamikus fieldset [cite: 2026-02-18]
         include 'Mezok/nezet.php';   // Táblaváltó és Megjelenítés [cite: 2026-03-05]
         include 'Tabla/nezet.php';   // Maga a táblázat [cite: 2026-03-05]
-        include 'Tabla/torles.php';   // Maga a táblázat [cite: 2026-03-05]
         include_once 'upload/modal.php';
         include_once 'export/modal.php';
         ?>
@@ -108,4 +108,5 @@ if ($selected_table) {
 </body>
 
 </html>
+
 
