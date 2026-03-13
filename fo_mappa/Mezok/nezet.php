@@ -14,7 +14,7 @@
     <?php foreach ($availableTables as $tName): ?>
         <?php 
         // Szőrszálhasogató szűrés: a technikai táblákat elrejtjük [cite: 2026-03-06]
-        if ($tName === 'm_va_ssd_raw' || $tName === 'raw_import_data' || $tName === 'm_va_inport_status') continue; 
+        if ($tName === 'm_va_ssd_raw' || $tName === 'raw_import_data' || $tName === 'm_va_import_status') continue; 
         ?>
         <option value="<?= $tName ?>" <?= ($selected_table === $tName) ? 'selected' : '' ?>>
             <?= htmlspecialchars($tName) ?>
@@ -75,6 +75,7 @@
 <?php else: ?>
 
     <?php endif; ?>
+
 
 
 
