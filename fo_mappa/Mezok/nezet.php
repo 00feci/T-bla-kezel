@@ -53,7 +53,55 @@
         <?php endif; ?>
     </div>
 <?php endif; ?>
+<?php endif; ?>
+    </div>
+<?php endif; ?>
 
+<?php if (!empty($selected_table) && $selected_table !== 'raw_import_data'): ?>
+<div class="vezerlo-csoport kozep-oldal" style="display:flex; align-items:center; gap:8px; background: #eef2f7; padding: 5px 10px; border-radius: 4px; border: 1px solid #cdd6e1;">
+    <label style="font-size: 13px; font-weight: bold; color: #333;">Oszlop típus:</label>
+    <select id="type_col_select" class="tabla-valaszto" style="font-size: 13px; max-width: 150px;">
+        <?php foreach ($headers as $fejlec): ?>
+            <option value="<?= htmlspecialchars($fejlec) ?>"><?= htmlspecialchars($fejlec) ?></option>
+        <?php endforeach; ?>
+    </select>
+    <select id="type_val_select" class="tabla-valaszto" style="font-size: 13px;">
+        <option value="LONGTEXT">szöveg</option>
+        <option value="BIGINT">szám</option>
+    </select>
+    <button type="button" onclick="changeColumnType()" style="background:#2196F3; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:3px; font-weight:bold; font-size: 13px;">Mentés</button>
+    <span id="type_save_success" style="color:#4CAF50; font-weight:bold; font-size:16px; display:none; margin-left:5px;">✔</span>
+</div>
+
+<script>
+async function changeColumnType() {
+    const col = document.getElementById('type_col_select').value;
+    const type = document.getElementById('type_val_select').value;
+    const table = document.querySelector('select[name="selected_table"]').value;
+
+    if(!col || !table) return;
+
+    const formData = new FormData();
+    formData.append('action', 'change_column_type');
+    formData.append('table', table);
+    formData.append('column', col);
+    formData.append('type', type);
+
+    try {
+        const res = await fetch('tabla1.php', { method: 'POST', body: formData });
+        if (res.ok) {
+            const checkmark = document.getElementById('type_save_success');
+            checkmark.style.display = 'inline';
+            setTimeout(() => { checkmark.style.display = 'none'; }, 3000);
+        } else {
+            alert('Hiba történt a módosítás során. (Lehetséges, hogy olyan szöveget próbálsz számmá alakítani, amit az adatbázis nem enged)');
+        }
+    } catch (e) {
+        alert('Hálózati hiba.');
+    }
+}
+</script>
+<?php endif; ?>
     <div class="vezerlo-csoport jobb-oldal">
         <label for="limit">Megjelenítés:</label>
         <select name="limit" id="limit" onchange="this.form.submit()" class="limit-valaszto">
