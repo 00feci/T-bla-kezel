@@ -61,7 +61,7 @@
     </select>
     <select id="type_val_select" class="tabla-valaszto" style="font-size: 13px;">
         <option value="longtext">szöveg</option>
-        <option value="int(max)">szám</option>
+        <option value="int(11)">szám</option>
     </select>
     <button type="button" onclick="changeColumnType()" style="background:#2196F3; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:3px; font-weight:bold; font-size: 13px;">Mentés</button>
     <span id="type_save_success" style="color:#4CAF50; font-weight:bold; font-size:16px; display:none; margin-left:5px;">✔</span>
