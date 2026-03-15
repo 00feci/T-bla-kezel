@@ -51,14 +51,41 @@
     </div>
 <?php endif; ?>
 
+
+
 <?php if (!empty($selected_table) && $selected_table !== 'raw_import_data'): ?>
+<?php
+// Oszlop típusok lekérdezése a JS számára
+$colTypesMap = [];
+try {
+    $stmtT = $pdo->query("DESCRIBE `$selected_table`");
+    while ($rT = $stmtT->fetch(PDO::FETCH_ASSOC)) {
+        $colTypesMap[$rT['Field']] = $rT['Type'];
+    }
+} catch(Exception $e) {}
+?>
+<script>
+    window.columnTypesMap = <?= json_encode($colTypesMap) ?>;
+</script>
+
 <div class="vezerlo-csoport kozep-oldal" style="display:flex; align-items:center; gap:8px; background: #eef2f7; padding: 5px 10px; border-radius: 4px; border: 1px solid #cdd6e1;">
     <label style="font-size: 13px; font-weight: bold; color: #333;">Oszlop típus:</label>
-    <select id="type_col_select" class="tabla-valaszto" style="font-size: 13px; max-width: 150px;">
-        <?php foreach ($headers as $fejlec): ?>
-            <option value="<?= htmlspecialchars($fejlec) ?>"><?= htmlspecialchars($fejlec) ?></option>
-        <?php endforeach; ?>
-    </select>
+    
+    <div class="type-special-col-container" style="display:inline-block; position:relative; min-width: 180px;">
+        <input type="text" class="type-col-search-input" placeholder="Válassz oszlopot..." 
+               value="" 
+               oninput="filterTypeColList(this)" onclick="showTypeColList(this)" autocomplete="off" 
+               style="width:100%; padding: 5px; box-sizing: border-box; border: 1px solid #aaa; font-size: 13px;">
+        <input type="hidden" id="type_col_select" class="type-real-col-value" value="">                    
+        <div class="type-custom-col-list" style="display:none; border:1px solid #ccc; background:white; max-height:150px; overflow-y:auto; position:absolute; z-index:1000; width:100%; text-align: left; box-shadow: 0px 4px 6px rgba(0,0,0,0.1);">
+            <?php foreach ($headers as $fejlec): ?>
+                <div onclick="selectTypeCol(this, '<?= htmlspecialchars($fejlec) ?>')" style="cursor:pointer; padding:5px; border-bottom:1px solid #eee; font-size: 13px;">
+                    <?= htmlspecialchars($fejlec) ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
     <select id="type_val_select" class="tabla-valaszto" style="font-size: 13px;">
         <option value="longtext">szöveg</option>
         <option value="int(11)">szám</option>
@@ -68,12 +95,57 @@
 </div>
 
 <script>
+function showTypeColList(input) {
+    const list = input.parentElement.querySelector('.type-custom-col-list');
+    if (list) list.style.display = 'block';
+}
+
+function filterTypeColList(input) {
+    const filter = input.value.toLowerCase();
+    const list = input.parentElement.querySelector('.type-custom-col-list');
+    const options = list.querySelectorAll('div');
+    list.style.display = 'block';
+    options.forEach(opt => {
+        const text = opt.innerText.toLowerCase();
+        opt.style.display = text.includes(filter) ? 'block' : 'none';
+    });
+}
+
+function selectTypeCol(element, value) {
+    const container = element.closest('.type-special-col-container');
+    container.querySelector('.type-col-search-input').value = element.innerText;
+    container.querySelector('.type-real-col-value').value = value;
+    container.querySelector('.type-custom-col-list').style.display = 'none';
+
+    // Tipus olvasása és beállítása [cite: 2026-03-05]
+    const typeSelect = document.getElementById('type_val_select');
+    const colType = window.columnTypesMap[value] || '';
+    
+    if (colType.toLowerCase().includes('int')) {
+        typeSelect.value = 'int(11)';
+    } else {
+        typeSelect.value = 'longtext';
+    }
+}
+
+// Kattintás kívülre bezárja a lenyíló listát
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.type-special-col-container')) {
+        document.querySelectorAll('.type-custom-col-list').forEach(list => {
+            list.style.display = 'none';
+        });
+    }
+});
+
 async function changeColumnType() {
     const col = document.getElementById('type_col_select').value;
     const type = document.getElementById('type_val_select').value;
     const table = document.querySelector('select[name="selected_table"]').value;
 
-    if(!col || !table) return;
+    if(!col || !table) {
+        alert("Kérlek válassz ki egy oszlopot először!");
+        return;
+    }
 
     const formData = new FormData();
     formData.append('action', 'change_column_type');
@@ -84,6 +156,9 @@ async function changeColumnType() {
     try {
         const res = await fetch('tabla1.php', { method: 'POST', body: formData });
         if (res.ok) {
+            // JS térkép frissítése, hogy többszöri módosításnál is jó maradjon az adat
+            window.columnTypesMap[col] = type;
+
             const checkmark = document.getElementById('type_save_success');
             checkmark.style.display = 'inline';
             setTimeout(() => { checkmark.style.display = 'none'; }, 3000);
@@ -98,6 +173,8 @@ async function changeColumnType() {
 </script>
 <?php endif; ?>
 
+
+    
     <div class="vezerlo-csoport jobb-oldal">
         <label for="limit">Megjelenítés:</label>
         <select name="limit" id="limit" onchange="this.form.submit()" class="limit-valaszto">
