@@ -21,13 +21,7 @@
         </option>
     <?php endforeach; ?>
 </select>
-        
-
-
-
-
-
-        <?php if ($selected_table !== 'raw_import_data'): ?>
+    <?php if ($selected_table !== 'raw_import_data'): ?>
     <button type="submit" name="action" value="delete_table" class="btn-remove" 
             onclick="return confirm('Biztos törölni szeretné a \'<?= htmlspecialchars($selected_table) ?>\' táblát?')">
         Törlés
@@ -53,7 +47,7 @@
         <?php endif; ?>
     </div>
 <?php endif; ?>
-<?php endif; ?>
+        <?php endif; ?>
     </div>
 <?php endif; ?>
 
@@ -66,8 +60,8 @@
         <?php endforeach; ?>
     </select>
     <select id="type_val_select" class="tabla-valaszto" style="font-size: 13px;">
-        <option value="LONGTEXT">szöveg</option>
-        <option value="BIGINT">szám</option>
+        <option value="longtext">szöveg</option>
+        <option value="int(max)">szám</option>
     </select>
     <button type="button" onclick="changeColumnType()" style="background:#2196F3; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:3px; font-weight:bold; font-size: 13px;">Mentés</button>
     <span id="type_save_success" style="color:#4CAF50; font-weight:bold; font-size:16px; display:none; margin-left:5px;">✔</span>
@@ -94,7 +88,8 @@ async function changeColumnType() {
             checkmark.style.display = 'inline';
             setTimeout(() => { checkmark.style.display = 'none'; }, 3000);
         } else {
-            alert('Hiba történt a módosítás során. (Lehetséges, hogy olyan szöveget próbálsz számmá alakítani, amit az adatbázis nem enged)');
+            const errorText = await res.text();
+            alert('Hiba történt a módosítás során:\n' + errorText);
         }
     } catch (e) {
         alert('Hálózati hiba.');
@@ -102,6 +97,7 @@ async function changeColumnType() {
 }
 </script>
 <?php endif; ?>
+
     <div class="vezerlo-csoport jobb-oldal">
         <label for="limit">Megjelenítés:</label>
         <select name="limit" id="limit" onchange="this.form.submit()" class="limit-valaszto">
