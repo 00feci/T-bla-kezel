@@ -17,8 +17,7 @@ $selected_table = $_REQUEST['selected_table'] ?? null;
 if (isset($_POST['action']) && $_POST['action'] === 'change_column_type') {
     $tbl = preg_replace('/[^a-zA-Z0-9_]/', '', $_POST['table']);
     $col = preg_replace('/[^a-zA-Z0-9_]/', '', $_POST['column']);
-    // Az int(max) megfelelője a BIGINT, ami a legnagyobb számformátum
-    $type = $_POST['type'] === 'BIGINT' ? 'BIGINT' : 'LONGTEXT';
+    $type = $_POST['type'] === 'int(max)' ? 'int(max)' : 'longtext';
 
     if ($tbl && $col && $tbl !== 'raw_import_data') {
         try {
