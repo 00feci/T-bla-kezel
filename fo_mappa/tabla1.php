@@ -7,12 +7,30 @@ header("Pragma: no-cache");
 require_once $_SERVER['DOCUMENT_ROOT'] .'/oldal/sql_config.php';
 $pdo = csatlakozasSzerver1();
 
-// 0. Alap adatok lekérése
 $tablesStmt = $pdo->query("SHOW TABLES");
 $availableTables = $tablesStmt->fetchAll(PDO::FETCH_COLUMN);
 
 // SZŐRSZÁLHASOGATÓ MÓDOSÍTÁS: Nincs kényszerített alapértelmezett tábla [cite: 2026-03-07]
 $selected_table = $_REQUEST['selected_table'] ?? null;
+
+// --- OSZLOP TÍPUS MÓDOSÍTÁS (AJAX) ---
+if (isset($_POST['action']) && $_POST['action'] === 'change_column_type') {
+    $tbl = preg_replace('/[^a-zA-Z0-9_]/', '', $_POST['table']);
+    $col = preg_replace('/[^a-zA-Z0-9_]/', '', $_POST['column']);
+    // Az int(max) megfelelője a BIGINT, ami a legnagyobb számformátum
+    $type = $_POST['type'] === 'BIGINT' ? 'BIGINT' : 'LONGTEXT';
+
+    if ($tbl && $col && $tbl !== 'raw_import_data') {
+        try {
+            $pdo->exec("ALTER TABLE `$tbl` MODIFY COLUMN `$col` $type");
+            echo 'OK';
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo 'Hiba: ' . $e->getMessage();
+        }
+    }
+    exit;
+}
 
 // Csak akkor ellenőrizzük, ha van választott tábla
 if ($selected_table && !in_array($selected_table, $availableTables)) {
@@ -104,8 +122,4 @@ if ($selected_table) {
     <script src="szuro.js?v=<?= time() ?>"></script>
     <script src="upload/script.js?v=<?= time() ?>"></script>
 </body>
-
 </html>
-
-
-
