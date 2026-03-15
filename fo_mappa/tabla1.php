@@ -30,7 +30,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'change_column_type') {
     }
     exit;
 }
-
 // Csak akkor ellenőrizzük, ha van választott tábla
 if ($selected_table && !in_array($selected_table, $availableTables)) {
     $selected_table = null; 
